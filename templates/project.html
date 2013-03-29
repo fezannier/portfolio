@@ -1,0 +1,48 @@
+{% extends "layout/home.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/portfolio/static/css/project.css" />
+{% endblock %}
+
+{% block scripts %}
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.js'></script>
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.compatibility.js'></script>
+<script src='/portfolio/static/js/project.js'></script>
+{% endblock %}
+
+{% block body %}
+	<div id='header'>
+		<div class='logo'><h1 id='header-title'><a href='/portfolio'>{{ info[0].title }}</a></h1></div>
+		<div id='navbar-container' style='display:inline-block;'>
+			<div class='navbar'><h3><a id='work' href='/portfolio'>portfolio</a></h3></div>
+			<div class='navbar'><h3><a id='archive' href='/portfolio/archive'>archive</a></h3></div>
+			<div class='navbar'><h3><a id='about' href='/portfolio/about'>about</a></h3></div>
+		</div>
+	</div>
+	<div id='project-text'>
+		<div id='project-title'><li><span style='color:black;'>{% autoescape false %}{{ project.title }}{% endautoescape %} ({{ project.year }})</span></li></div>
+		<div id='project-description'>{% autoescape false %}{{ project.description }}{% endautoescape %}</div>
+	</div>
+	<div id='project-media'>
+		<div id='project-gallery-control'>
+			<div id='next'></div>
+			<div id='prev'></div>
+		</div>
+		<div id='project-gallery-container'>
+			<div id='project-gallery'>
+				{%for img in project.images %}
+					<div class='project-image'>
+						<div class='image'><img src='/portfolio/static/uploads/{{ project.id }}/{{ img.filename }}'/></div>
+						{% if img.caption %}
+							<div class='caption'>{{ img.caption }}</div>
+						{% endif %}
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div style="height:550px; position:absolute;width:100%;" id="filler"></div>
+	<div id='footer'>
+		<div style="margin-top:0px;padding:0;float:right;margin-right:30px;"><h3><a id='goback' href='/portfolio'>goback</a></h3></div>
+	</div>
+{% endblock %}

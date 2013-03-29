@@ -1,0 +1,139 @@
+{% extends "layout/main.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/portfolio/static/css/new.css" />
+{% endblock %}
+
+{% block scripts %}
+<script src='/portfolio/static/js/new.js'></script>
+<script src='/portfolio/static/js/json2.js'></script>
+{% endblock %}
+
+{% block body %}
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner" style="padding-left: 20px;">
+		<a class="brand" href="/">myPortfolio</a>
+		<ul style="padding-right: 20px;" class="nav pull-right">
+			<li><button type="button" class="btn btn-info pull-right" onclick="logout()">logout</button></li>
+		</ul>
+	</div>
+</div>
+
+<div style="display:none;" id="id">{{ project.id }}</div>
+
+<div class="row span10">
+	<div class="column span10">
+		<h3>{{ formType }} Project</h3>
+
+		{# display any Flash/Session messages #}
+		{% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <p><span class="alert alert-success">{{ message }}</span></p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {# end of Flash/Sesssion messages #}
+
+		<div style="margin:0" class="span9">
+			<form method="POST" action="/portfolio/save">
+				{{ form.csrf_token }}
+
+				<legend>General Info</legend>
+				<label>Title</label>
+				<input style="width:100%" type="text" name='title' placeholder="Type title…"></input>
+				
+				<label>Pitch</label>
+				<input style="width:100%" type="text" name='pitch' placeholder="Type a short sentece to describe the project (it will be showed in the homepage)"></input>
+				
+				<label>Description</label>
+				<textarea style="width:100%" rows='10' name='description' placeholder="Type complete description…"></textarea>
+				
+				<label>Year</label>
+				<select name="year">
+					<option>2000</option>
+					<option>2001</option>
+					<option>2002</option>
+					<option>2003</option>
+					<option>2004</option>
+					<option>2005</option>
+					<option>2006</option>
+					<option>2007</option>
+					<option>2008</option>
+					<option>2009</option>
+					<option>2010</option>
+					<option>2011</option>
+					<option>2012</option>
+					<option>2013</option>
+					<option>2014</option>
+					<option>2015</option>
+					<option>2016</option>
+					<option>2017</option>
+				</select>
+				<br/>
+				<legend>Archive</legend>
+				<input type="checkbox" name='archive' value='archive'> put project in archive section</input>
+				<br/>
+				<br/>
+				<legend>Media</legend>
+				<select name='media[]' id='media' multiple='multiple'>
+				</select>
+				<div class="input-append">
+  					<input class="span2" id="medium" type="text">
+			 		<button class="btn" type="button" onclick="addMedium()">add</button>
+				</div>
+				<br/>
+				<legend>Field of problem</legend>
+				<select name='problems[]' id='problems' multiple='multiple'>
+				</select>
+				<div class="input-append">
+  					<input class="span2" id="problem" type="text">
+			 		<button class="btn" type="button" onclick="addProblem()">add</button>
+				</div>
+				<br/>
+				<legend>
+				<legend>Images for project's gallery</legend>
+				<article>
+					<div style="width: 100%" id="holder_gallery"><ul class="thumbnails" id="gallery"></ul></div> 
+					<p id="upload_gallery" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
+					<p id="filereader">File API & FileReader API not supported</p>
+  					<p id="formdata">XHR2's FormData is not supported</p>
+  					<p id="progress">XHR2's upload progress isn't supported</p>
+  					<p>Upload progress: <progress id="uploadprogress_gallery" min="0" max="100" value="0">0</progress></p>
+  					<p>Drag an image from your desktop on to the drop zone above.</p>
+				</article>
+				<legend>Thumbnails</legend>
+				<table style="width:100%">
+					<tr>
+						<td>				
+							<article>
+								<small>for main page</small><br/>
+								<div id="holder_thumb"><ul class="thumbnails" id="thumb"></ul></div> 
+								<p id="upload_thumb" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
+								<p>Upload progress: <progress id="uploadprogress_thumb" min="0" max="100" value="0">0</progress></p>
+							</article>
+						</td>
+						<td>
+						<article>
+							<small>for main page on mouse hover</small><br/>
+							<div id="holder_thumb_hover"><ul class="thumbnails" id="thumbHover"></ul></div> 
+							<p id="upload_thumb_hover" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
+							<p>Upload progress: <progress id="uploadprogress_thumb_hover" min="0" max="100" value="0">0</progress></p>
+						</article>
+						</td>
+					</tr>
+				</table>
+				
+				<input type="text" style="display:none;" name="id" value="{{ project.id }}"></input>
+				
+				<br/>
+  				<hr/>
+  				<div class="btn-group pull-right">
+  					<button class="btn btn-warning" type="button" onclick="cancelForm()">Cancel</button>
+  					<button class="btn btn-success" type="submit">Save</button>
+  				</div>
+			</form>
+			<div style="height:100px"></div>
+		</div>
+	</div>
+{% endblock %}

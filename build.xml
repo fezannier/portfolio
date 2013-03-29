@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="twitio" default="prod" basedir="/home/flask_apps/public_html/apps/twittero/">
+
+    <description>A web based tool for building 3D compositions that change according to the data attached to the parts contained</description>
+
+    <target name="-load.properties"
+        description="Set properties for this build">
+        <!--YUI Compressor location-->
+        <property name="yui.dir" value="${basedir}/yuicompressor/build/yuicompressor-2.4.7.jar"/>
+        <!--Source JS dir-->
+        <property name="src.js.dir" value="${basedir}/static/js"/>
+        <!--Source CSS dir-->
+        <property name="src.css.dir" value="${basedir}/static/css"/>
+        <!--Source Lint/Hint dir-->
+        <property name="jslint.js" value="${basedir}/lint/jslint.js"/>
+        <!--Rhino dir-->
+        <property name="js.jar" value="${basedir}/rhino/js.jar"/>
+        <!--Output dir-->
+        <property name="build.dir" value="static/build"/>
+        <!--Build version information -->
+        <property name="build.major" value="1"/>
+        <property name="build.minor" value="1"/>
+    </target>
+
+
+
+    <!--Create build directories-->
+    <target name="-init" depends="-load.properties"
+        description="Create build directory structure">
+        <!--Create the time stamp for the new build-->
+        <tstamp>
+            <format property="TODAY" pattern="EEE, d MMM yyyy HH:mm:ss Z"/>
+        </tstamp>
+        
+        <!--Delete previous build files-->
+        <delete dir="${build.dir}"/>
+        
+        <!--Recreate the build directories-->
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/js"/>
+        <mkdir dir="${build.dir}/css"/>
+        
+        <!--Log the build timestamps to file-->
+        <echo file="${build.dir}/js/tstamp.txt" append="false">Build Date: ${TODAY}</echo>
+        <echo file="${build.dir}/css/tstamp.txt" append="false">Build Date: ${TODAY}</echo>
+    </target>
+
+
+	 <!--JS Lint-->
+	<target depends="-init" name="-js.lint">
+	    <pathconvert pathsep=" " property="jsfiles">
+	        <fileset dir="${build.dir}/js/">
+	            <include name="*.js"/>
+	        </fileset>
+	    </pathconvert>
+	    <exec dir="${build.dir}/js/" executable="java" failonerror="true">
+	        <arg line="-jar ${js.jar} ${jslint.js} ${jsfiles}"/>
+	    </exec>
+	    <echo>Finished</echo>
+	</target>
+	
+	
+    <!--Concatenate JS files-->
+    <target name="-js.concatenate" depends="-js.lint" 
+        description="Concatenates specified JavaScript files">
+        <concat destfile="${build.dir}/js/twitio.js">
+            <fileset 
+                dir="${src.js.dir}"
+                includes="*.js" 
+                excludes=""/>
+        </concat>
+        <echo>Finished</echo>
+    </target>
+
+	    
+    
+    <!--Concatenate CSS files-->
+    <target name="-css.concatenate" depends="-init" 
+        description="Concatenates specified CSS files">
+        <concat destfile="${build.dir}/css/twitio.css">
+            <!--first.css and second.css should be first in the concatenated file-->
+            <filelist 
+                dir="${src.css.dir}" 
+                files=""/>
+            <!--All of the other files in the directory should appear after.-->
+            <fileset 
+                dir="${src.css.dir}"
+                includes="*.css" 
+                excludes=""/>
+        </concat>
+        <echo>Finished</echo>
+    </target>
+
+
+
+    <!--Minify JS files-->
+    <target name="-js.minify" depends="-js.concatenate" 
+        description="Minifies JavaScript files">
+        <apply executable="java" parallel="false" dest="${build.dir}/js">
+            <fileset 
+                dir="${build.dir}/js" 
+                includes="twitio.js"/>
+            <arg line="-jar"/>
+            <arg path="${yui.dir}"/>
+            <srcfile/>
+            <arg line="-o"/>
+            <mapper type="glob" from="*.js" to="*-min.js"/>
+            <targetfile/>
+        </apply>
+        <echo>Finished</echo>
+    </target>
+
+
+
+    <!--Minify CSS files-->
+    <target name="-css.minify" depends="-css.concatenate" 
+        description="Minifies CSS files">
+        <apply executable="java" parallel="false"  dest="${build.dir}/css">
+            <fileset 
+                dir="${build.dir}/css" 
+                includes="twitio.css"/>
+            <arg line="-jar"/>
+            <arg path="${yui.dir}"/>
+            <arg line="--line-break 0"/>
+            <srcfile/>
+            <arg line="-o"/>
+            <mapper type="glob" from="*.css" to="*-min.css"/>
+            <targetfile/>
+        </apply>
+        <echo>Finished</echo>
+    </target>
+
+
+    <!--Build-->
+    <target name="prod" 
+        description="Builds project files for production use"
+        depends="
+            -load.properties, 
+            -init, 
+            -js.concatenate,
+            -js.lint, 
+            -css.concatenate, 
+            -js.minify, 
+            -css.minify">
+    </target>
+</project>
+

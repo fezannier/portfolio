@@ -1,0 +1,52 @@
+{% extends "layout/home.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/portfolio/static/css/home.css" />
+<link href='http://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
+{% endblock %}
+
+{% block scripts %}
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.js'></script>
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.compatibility.js'></script>
+<script src='/portfolio/static/js/home.js'></script>
+{% endblock %}
+
+{% block body %}
+	<div id='header'>
+		<div class='logo'><h1 id='header-title'>{{ info[0].title }}</h1></div>
+		<div id='navbar-container' style='display:inline-block;'>
+			<div class='navbar'><h3><a id='work' href='/portfolio'>portfolio</a></h3></div>
+			<div class='navbar'><h3><a id='archive' href='/portfolio/archive'>archive</a></h3></div>
+			<div class='navbar'><h3><a id='about' href='/portfolio/about'>about</a></h3></div>
+		</div>
+	</div>
+<!-- 
+	<div id='pitch'>
+		<p id='pitch-text'>{% autoescape false %}{{ info[0].pitch }}{% endautoescape %}</p>
+	</div>
+ -->
+	<div id='projects'>
+		{% for project in projects %}
+			<div class='project-container' id="{{ project.id }}" onclick='window.location="/portfolio/project?id={{project.id}}&from=portfolio"'>
+				<div class='project-inner-container'>
+					<div class='project-thumb' id='thumbnail-{{ project.id }}'>
+						<img src="/portfolio/static/uploads/{{ project.id }}/{{ project.thumbnail }}">
+					</div>
+					<div class='project-thumb-hover' id='hover-{{ project.id }}'>
+						<img src="/portfolio/static/uploads/{{ project.id }}/{{ project.thumbnailHover }}">
+					</div>
+					<div class='project-caption' id='caption-{{ project.id }}'>
+						<h2 class='title'><a href="/portfolio/project?id={{project.id}}&from=portfolio">{% autoescape false %}{{ project.title }}{% endautoescape %}</a></h2>
+						<h3 class='pitch'>{{ project.pitch }}</h3>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		<div id='white-filler'></div>
+	</div>
+	<div id='footer'>
+		<div id='email'>
+			<p><a href="mailto:{{ info[0].email }}?Subject=Hello Federico (from your portfolio)">{{ info[0].email }}</a></p>
+		</div>
+	</div>
+{% endblock %}

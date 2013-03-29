@@ -1,0 +1,120 @@
+{% extends "layout/main.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/portfolio/static/css/admin.css" />
+{% endblock %}
+
+{% block scripts %}
+<script src='/portfolio/static/js/admin.js'></script>
+{% endblock %}
+
+{% block body %}
+
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner" style="padding-left: 20px;">
+		<a class="brand" href="/portfolio">myPortfolio</a>
+		<ul style="padding-right: 20px;" class="nav pull-right">
+			<li><button type="button" class="btn btn-info pull-right" onclick="logout()">logout</button></li>
+		</ul>
+	</div>
+</div>
+<div class="hero-unit">
+	<h3>Welcome back {{ current_user.username }}</h3>
+	<p class="muted"> {{ selectedCount }} selected projects - {{ archivedCount }} archived projects</p>
+	<form method='POST' action='/portfolio/info'>
+		<fieldset>
+			<legend>About me</legend>
+			<label>Title</label><input style="width: 100%;" type="text" name="title" id="title" placeholder="Gallery title…" value="{{ info[0].title }}">
+    		<label>Pitch</label><input style="width: 100%;" type="text" name="pitch" id="pitch"  placeholder="Your pitch…" value="{{ info[0].pitch }}">
+			<label>BIO</label><textarea style="width: 100%;" id="bio" name="bio" rows='8' placeholder="About page…">{{ info[0].bio }}</textarea>
+			<label>email</label><input style="width: 100%;" type="text" name="email" id="email"  placeholder="Your email…" value="{{ info[0].email }}">
+			<label>address</label><textarea style="width: 100%;" id="address" name="address" rows='4' placeholder="Your address…">{{ info[0].address }}</textarea>
+			<label>phone</label><input style="width: 100%;" type="text" name="phone" id="phone"  placeholder="Your phone number…" value="{{ info[0].phone }}">
+    		<br/><button type="submit" class="btn pull-right">update</button>
+  		</fieldset>
+	</form>
+	<hr/>
+	<div style="width: 100%">
+		<div style="margin: 0 auto; width: 282px;" class="btn-group">
+ 			<button type="button" class="btn btn-info btn-large" onclick="window.location = '/portfolio/files'"><i class="icon-upload icon-white"></i> upload files</button>
+ 			<button type="button" class="btn btn-info btn-large" onclick="window.location = '/portfolio/new'"><i class="icon-file icon-white"></i> add project</button>
+		</div>	
+	</div>
+</div>
+<legend>Projects</legend>
+<div style="width: 100%">
+	<ul class="nav nav-tabs" id="myProjects">
+		<li class="active"><a href="#selected">Selected</a></li>
+		<li><a href="#archived">Archived</a></li>
+	</ul>
+	<div class="tab-content">
+		<div class="tab-pane active" id="selected">
+			<small>(click on row to edit project)</small>
+			<table id='table' class="table table-striped table-hover">
+				<tr>
+					<td style="width:20px"><strong>#</strong></td>
+					<td style="width:250px"><strong>Title</strong></td>
+					<td style="width:250px"><strong>Pitch</strong></td>
+					<td style="width:100px"><strong>Thumbnail</strong></td>
+					<td style="width:240px"><strong>Created on</strong></td>
+					<td style="width:50px"><strong>Delete</strong></td>
+				</tr>
+				{% for project in selected %}
+				<tr id='{{ project.id }}' class="table-row" onclick="editProject('{{ project.id }}')" onmouseover="" style="cursor: pointer;" >
+					<td style="vertical-align: middle;">
+<!-- 
+				<input id='custom-rank-{{ project.id }}'name='rank' type='text'></input>
+				<button type='button' onclick="var rank = document.getElementById('custom-rank-{{ project.id }}').value; updateRank('{{ project.id }}', rank, null, null)">save</button>
+-->
+						<div style="display:none;" id='rank-{{ project.id }}'>{{ project.rank }}</div>
+						<div class="btn-group btn-group-vertical">
+							<button id='up' type="button" class="btn btn-info btn-mini" onclick="rankProject('{{ project.id }}', this)"><i class='icon-chevron-up icon-white'></i></button>
+							<button id='down' type="button" class="btn btn-info btn-mini" onclick="rankProject('{{ project.id }}', this)"><i class='icon-chevron-down icon-white'></i></button>
+						</div>
+					</td>
+					<td>{{ project.title }}</td>
+					<td>{{ project.pitch }}</td>
+					<td><img src="/portfolio/static/uploads/{{ project.id }}/{{ project.thumbnail }}" width=80px/></td>
+					<td>{{ project.timestamp }}</td>
+					<td style="vertical-align: middle;"><button style="z-index:20" type="button" class="btn btn-danger" onclick="deleteProject('{{ project.id }}', this);deleteLine(this)"><i class="icon-trash icon-white"></i></button></td>
+				</tr>
+			{% endfor %}
+			</table>
+		</div>
+		<div class="tab-pane" id="archived">
+			<small>(click on row to edit project)</small>
+			<table id='table' class="table table-striped table-hover">
+				<tr>
+					<td style="width:20px"><strong>#</strong></td>
+					<td style="width:250px"><strong>Title</strong></td>
+					<td style="width:250px"><strong>Pitch</strong></td>
+					<td style="width:100px"><strong>Thumbnail</strong></td>
+					<td style="width:240px"><strong>Created on</strong></td>
+					<td style="width:50px"><strong>Delete</strong></td>
+				</tr>
+				{% for project in archived %}
+				<tr id='{{ project.id }}' class="table-row" onclick="editProject('{{ project.id }}')" onmouseover="" style="cursor: pointer;" >
+					<td style="vertical-align: middle;">
+<!-- 
+				<input id='custom-rank-{{ project.id }}'name='rank' type='text'></input>
+				<button type='button' onclick="var rank = document.getElementById('custom-rank-{{ project.id }}').value; updateRank('{{ project.id }}', rank, null, null)">save</button>
+-->
+						<div style="display:none;" id='rank-{{ project.id }}'>{{ project.rank }}</div>
+						<div class="btn-group btn-group-vertical">
+							<button id='up' type="button" class="btn btn-info btn-mini" onclick="rankProject('{{ project.id }}', this)"><i class='icon-chevron-up icon-white'></i></button>
+							<button id='down' type="button" class="btn btn-info btn-mini" onclick="rankProject('{{ project.id }}', this)"><i class='icon-chevron-down icon-white'></i></button>
+						</div>
+					</td>
+					<td>{{ project.title }}</td>
+					<td>{{ project.pitch }}</td>
+					<td><img src="/portfolio/static/uploads/{{ project.id }}/{{ project.thumbnail }}" width=80px/></td>
+					<td>{{ project.timestamp }}</td>
+					<td style="vertical-align: middle;"><button style="z-index:20" type="button" class="btn btn-danger" onclick="deleteProject('{{ project.id }}', this);deleteLine(this)"><i class="icon-trash icon-white"></i></button></td>
+				</tr>
+			{% endfor %}
+			</table>
+		</div>
+	</div>
+</div>
+<div style="height:50px"></div>
+{% endblock %}

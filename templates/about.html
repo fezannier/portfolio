@@ -1,0 +1,56 @@
+{% extends "layout/home.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/portfolio/static/css/about.css" />
+{% endblock %}
+
+{% block scripts %}
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.js'></script>
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.compatibility.js'></script>
+<script src='/portfolio/static/js/about.js'></script>
+{% endblock %}
+
+{% block body %}
+	<div id='header'>
+		<div class='logo'><h1 id='header-title'>{{ info[0].title }}</h1></div>
+		<div id='navbar-container' style='display:inline-block;'>
+			<div class='navbar'><h3><a id='work' href='/portfolio'>portfolio</a></h3></div>
+			<div class='navbar'><h3><a id='archive' href='/portfolio/archive'>archive</a></h3></div>
+			<div class='navbar'><h3><a id='about' href='/portfolio/about'>about</a></h3></div>
+		</div>
+	</div>
+	<div id='inner-container'>
+<!-- 
+		<div id='portrait'>
+			<div class='index'><li><span style='color:black;'>Me</span></li></div>
+			<div class='content'><img src='/portfolio/static/uploads/info/{{ info[0].photo }}' width=200px/></div>
+		</div>
+ -->
+		<div id='bio'>
+			<div class='index'><li><span style='color:black;'>About me</span></li></div>
+			<div class='content'>
+				<strong>{% autoescape false %}{{ info[0].pitch }}{% endautoescape %}</strong><br/>
+				{% autoescape false %}{{ info[0].bio }}{% endautoescape %}
+			</div>
+		</div>
+		<div id='resume'>
+			<div class='index'><li><span style='color:black;'>Resume</span></li></div>
+			<div class='content'>
+				<a href='/portfolio/static/uploads/info/{{ info[0].resume }}' target="_blank" id="view">view</a><br/>
+				<a href='http://federicozannier.com/cgi-bin/downloadPDF.php?file={{ info[0].resume }}' id="download">download pdf</a>
+			</div>
+		</div>
+		<div id='contact'>
+			<div class='index'><li><span style='color:black;'>Contact me</span></li></div>
+			<div class='content'>
+				<p style='line-height:0;'><a href="mailto:{{ info[0].email }}?Subject=Hello Federico (from your portfolio)">{{ info[0].email }}</a></p>
+				<p>{% autoescape false %}{{ info[0].address }}{% endautoescape %}</p>
+				<p style='line-height:0;'>{% autoescape false %}{{ info[0].phone }}{% endautoescape %}</p>
+			</div>
+		</div>
+		
+<!-- 
+		<div style="height:550px"></div>
+ -->
+	</div>
+{% endblock %}

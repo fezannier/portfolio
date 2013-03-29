@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#initialize all folders in server
+#make the dir if not existing
+mkdir -p /tmp/data
+#remove any previous content
+rm -rf /tmp/data/*
+echo 'fetching http://federicozannier.com/myMirror/twittero/bkg.png'
+curl http://federicozannier.com/myMirror/twittero/bkg.png > bkg.png
+mv bkg.png /tmp/data/
+echo 'fetching http://federicozannier.com/myMirror/twittero/convertObjToJSON.py'
+curl http://federicozannier.com/myMirror/twittero/convertObjToJSON.py > convertObjToJSON.py
+mv convertObjToJSON.py /tmp/data/
+chmod 755 /tmp/data/convertObjToJSON.py
+echo 'fetching http://federicozannier.com/myMirror/twittero/my_ffmpeg'
+curl http://federicozannier.com/myMirror/twittero/my_ffmpeg > my_ffmpeg
+mv my_ffmpeg /tmp/data/
+chmod 755 /tmp/data/my_ffmpeg
+echo 'fetching http://federicozannier.com/myMirror/twittero/twitteroBkgImages.php'
+curl http://federicozannier.com/myMirror/twittero/twitteroBkgImages.txt > twitteroBkgImages.php
+mv twitteroBkgImages.php /usr/lib/cgi-bin
+echo 'fetching http://federicozannier.com/myMirror/twittero/twitteroGetFromS3.php'
+curl http://federicozannier.com/myMirror/twittero/twitteroGetFromS3.txt > twitteroGetFromS3.php
+mv twitteroGetFromS3.php /usr/lib/cgi-bin

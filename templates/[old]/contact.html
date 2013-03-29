@@ -1,0 +1,38 @@
+{% extends "layout/home.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/portfolio/static/css/contact.css" />
+{% endblock %}
+
+{% block scripts %}
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.js'></script>
+<script src='/portfolio/static/js/vendor/jQuery/jquery.easing.compatibility.js'></script>
+<script src='/portfolio/static/js/contact.js'></script>
+{% endblock %}
+
+{% block body %}
+	<div id='header'>
+		<div class='logo'><h1 id='header-title'><a href='/portfolio'>{{ info[0].title }}</a></h1></div>
+		<div class='navbar'><h3><a id='contact' href='/portfolio/contact'>contact</a></h3></div>
+		<div class='navbar'><h3><a id='about' href='/portfolio/about'>about</a></h3></div>
+		<div class='navbar'><h3><a id='work' href='/portfolio'>work</a></h3></div>
+	</div>
+	<div id='inner-container'>
+		<div id='email'>
+			<div class='index'><li><span style='color:black;'>email</span></li></div>
+			<div class='content'><a href="mailto:{{ info[0].email }}?Subject=Hello Federico (from your portfolio)">{{ info[0].email }}</a></div>
+		</div>
+		<div id='address'>
+			<div class='index'><li><span style='color:black;'>address</span></li></div>
+			<div class='content'>{% autoescape false %}{{ info[0].address }}{% endautoescape %}</div>
+		</div>
+		<div id='phone'>
+			<div class='index'><li><span style='color:black;'>phone</span></li></div>
+			<div class='content'>{% autoescape false %}{{ info[0].phone }}{% endautoescape %}</div>
+		</div>
+		<div style="height:850px"></div>
+	</div>
+	<div id='footer'>
+		<div class='navbar' style='margin=0'><h3><a id='goback' href='/portfolio'>goback</a></h3></div>
+	</div>
+{% endblock %}

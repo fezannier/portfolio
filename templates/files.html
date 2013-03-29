@@ -1,0 +1,57 @@
+{% extends "layout/main.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="/portfolio/static/css/files.css" />
+{% endblock %}
+
+{% block scripts %}
+<script src='/portfolio/static/js/files.js'></script>
+<script src='/portfolio/static/js/json2.js'></script>
+{% endblock %}
+
+{% block body %}
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner" style="padding-left: 20px;">
+		<a class="brand" href="/">myPortfolio</a>
+		<ul style="padding-right: 20px;" class="nav pull-right">
+			<li><button type="button" class="btn btn-info pull-right" onclick="logout()">logout</button></li>
+		</ul>
+	</div>
+</div>
+
+<div id='photo-file' style='display:none'>{{ info[0].photo }}</div>
+<div id='resume-file' style='display:none'>{{ info[0].resume }}</div>
+
+<div class="row span10">
+	<div class="column span10">
+	<legend>Photo</legend>
+		<article>
+			<div id="holder"><ul class="thumbnails" id="photo"></ul></div> 
+			<p id="upload" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
+			<p id="filereader">File API & FileReader API not supported</p>
+  			<p id="formdata">XHR2's FormData is not supported</p>
+  			<p id="progress">XHR2's upload progress isn't supported</p>
+  			<p>Upload progress: <progress id="uploadprogress" min="0" max="100" value="0">0</progress></p>
+  			<p>Drag an image from your desktop on to the drop zone above.</p>
+		</article>
+	</div>
+</div>
+<div class="row span10">
+	<div class="column span10">
+		<form method="POST" action="/portfolio/uploadResume" enctype="multipart/form-data">
+			<legend>Resume</legend>
+			<p id="resume"></p>
+			<p>Upload a new file:</p>
+			<input type="file" name="file"></input> 
+			<br/>
+  			<hr/>
+	  		<div class="btn-group pull-right">
+  				<button class="btn btn-warning" type="button" onclick="window.location = '/portfolio/admin'">Cancel</button>
+  				<button class="btn btn-success" type="submit">Update</button>
+	  		</div>
+		</form>
+		<div style="height:100px"></div>
+	</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+#holder_gallery, #holder_thumb, #holder_thumb_hover { padding: 10px; border: 10px dashed #ccc; width: 300px; min-height: 300px; margin: 20px auto;}
+#holder_gallery.hover { border: 10px dashed #0c0; }
+#holder_thumb.hover { border: 10px dashed #0c0; }
+#holder_thumb_hover.hover { border: 10px dashed #0c0; }
+#holder_gallery img, #holder_thumb img, #holder_thumb_hover img { display: block; margin: 10px auto; }
+#holder_gallery p, #holder_thumb p, #holder_thumb_hover p { margin: 10px; font-size: 14px; }
+progress_gallery, progress_thumb, progress_thumb_hover { width: 100%; }
+progress_gallery:after, progress_thumb:after, progress_thumb_hover:after  { content: '%'; }
+.fail { background: #c00; padding: 2px; color: #fff; }
+.hidden { display: none !important;}
